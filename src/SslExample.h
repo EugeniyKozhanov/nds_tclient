@@ -91,13 +91,19 @@ class SslExample
 		std::pair<std::error_code, std::string> decrypt(const std::string& text)
 		{
 			std::string decr;
-			return std::make_pair(process<decltype(EVP_DecryptInit_ex), decltype(EVP_DecryptUpdate), decltype(EVP_DecryptFinal_ex)>(EVP_DecryptInit_ex, EVP_DecryptUpdate, EVP_DecryptFinal_ex, text, decr, static_cast<int>(detail::SslError::DecInit)), decr);
+			std::error_code error = process<decltype(EVP_DecryptInit_ex), decltype(EVP_DecryptUpdate), decltype(EVP_DecryptFinal_ex)>
+													(EVP_DecryptInit_ex, EVP_DecryptUpdate, EVP_DecryptFinal_ex, 
+													 text, decr, static_cast<int>(detail::SslError::DecInit));
+			return std::make_pair(error, decr);
 		}
 
 		std::pair<std::error_code, std::string> encrypt(const std::string& text)
 		{
-			std::string enc;
-			return std::make_pair(process<decltype(EVP_EncryptInit_ex), decltype(EVP_EncryptUpdate), decltype(EVP_EncryptFinal_ex)>(EVP_EncryptInit_ex, EVP_EncryptUpdate, EVP_EncryptFinal_ex, text, enc, static_cast<int>(detail::SslError::EncInit)), enc);
+			std::string encr;
+			std::error_code error = process<decltype(EVP_EncryptInit_ex), decltype(EVP_EncryptUpdate), decltype(EVP_EncryptFinal_ex)>
+													(EVP_EncryptInit_ex, EVP_EncryptUpdate, EVP_EncryptFinal_ex, 
+													 text, encr, static_cast<int>(detail::SslError::EncInit));
+			return std::make_pair(error, encr);
 		}
 
 	private :
